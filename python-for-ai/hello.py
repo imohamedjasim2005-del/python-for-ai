@@ -1332,3 +1332,133 @@ shopping_cart = [
     },
 ]
 print(calculate_total(shopping_cart))
+
+
+def add(a, b):
+    return a + b
+
+
+def subtract(a, b):
+    return a - b
+
+
+def multiply(a, b):
+    return a * b
+
+
+def divide(a, b):
+    if b == 0:
+        return "Error! Division by zero."
+    return a / b
+
+
+print("Simple Calculator")
+print("1. Add")
+print("2. Subtract")
+print("3. Multiply")
+print("4. Divide")
+
+choice = input("Enter choice (1/2/3/4): ")
+
+num1 = float(input("Enter first number: "))
+num2 = float(input("Enter second number: "))
+
+if choice == "1":
+    print("You choose addition.")
+    print(f"Adding {num1} and {num2}...")
+    print("Result:", add(num1, num2))
+elif choice == "2":
+    print("You choose subtraction.")
+    print(f"Subtracting {num2} from {num1}...")
+    print("Result:", subtract(num1, num2))
+elif choice == "3":
+    print("You choose multiplication.")
+    print(f"Multiplying {num1} and {num2}...")
+    print("Result:", multiply(num1, num2))
+elif choice == "4":
+    print("You choose division.")
+    print(f"Dividing {num1} by {num2}...")
+    print("Result:", divide(num1, num2))
+else:
+    print("Invalid input")
+
+import math
+
+
+def scientific_calculator():
+    print("Scientific Calculator")
+    print("----------------------")
+    print("Available operations:")
+    print("1. Addition (+)")
+    print("2. Subtraction (-)")
+    print("3. Multiplication (*)")
+    print("4. Division (/)")
+    print("5. Power (x^y)")
+    print("6. Square root (√)")
+    print("7. Logarithm (log10)")
+    print("8. Natural log (ln)")
+    print("9. Sine (sin)")
+    print("10. Cosine (cos)")
+    print("11. Tangent (tan)")
+    print("12. Factorial (!)")
+    print("0. Exit")
+
+    while True:
+        choice = input("\nEnter choice: ")
+
+        if choice == "0":
+            print("Exiting calculator.")
+            break
+
+        try:
+            if choice in ["1", "2", "3", "4", "5"]:
+                a = float(input("Enter first number: "))
+                b = float(input("Enter second number: "))
+
+                if choice == "1":
+                    print("Result:", a + b)
+                elif choice == "2":
+                    print("Result:", a - b)
+                elif choice == "3":
+                    print("Result:", a * b)
+                elif choice == "4":
+                    print("Result:", a / b if b != 0 else "Error: Division by zero")
+                elif choice == "5":
+                    print("Result:", math.pow(a, b))
+
+            elif choice == "6":
+                x = float(input("Enter number: "))
+                print("Result:", math.sqrt(x))
+
+            elif choice == "7":
+                x = float(input("Enter number: "))
+                print("Result:", math.log10(x))
+
+            elif choice == "8":
+                x = float(input("Enter number: "))
+                print("Result:", math.log(x))
+
+            elif choice == "9":
+                x = float(input("Enter angle (degrees): "))
+                print("Result:", math.sin(math.radians(x)))
+
+            elif choice == "10":
+                x = float(input("Enter angle (degrees): "))
+                print("Result:", math.cos(math.radians(x)))
+
+            elif choice == "11":
+                x = float(input("Enter angle (degrees): "))
+                print("Result:", math.tan(math.radians(x)))
+
+            elif choice == "12":
+                x = int(input("Enter integer: "))
+                print("Result:", math.factorial(x))
+
+            else:
+                print("Invalid choice")
+
+        except Exception as e:
+            print("Error:", e)
+
+
+scientific_calculator()
