@@ -876,13 +876,11 @@ import pandas as pd
 daily_data = data["daily"]
 
 # Create a DataFrame
-df = pd.DataFrame(
-    {
-        "date": daily_data["time"],
-        "max_temp": daily_data["temperature_2m_max"],
-        "min_temp": daily_data["temperature_2m_min"],
-    }
-)
+df = pd.DataFrame({
+    "date": daily_data["time"],
+    "max_temp": daily_data["temperature_2m_max"],
+    "min_temp": daily_data["temperature_2m_min"],
+})
 
 # Convert date strings to datetime
 df["date"] = pd.to_datetime(df["date"])
@@ -1462,3 +1460,230 @@ def scientific_calculator():
 
 
 scientific_calculator()
+
+# leetcode problem: Two Sum
+
+
+def two_sum(nums, target):
+    seen = {}  # value -> index
+
+    for i, num in enumerate(nums):
+        complement = target - num
+
+        if complement in seen:
+            return [seen[complement], i]
+
+        seen[num] = i
+
+    return []  # fallback (though problem guarantees one solution)
+
+
+nums = [2, 7, 11, 15]
+target = 9
+
+print(two_sum(nums, target))
+
+# leetcode problem: Add Two Numbers (using lists to represent linked lists)
+
+
+def add_two_numbers(l1, l2):
+    result = []
+    carry = 0
+
+    for i in range(max(len(l1), len(l2))):
+        v1 = l1[i] if i < len(l1) else 0
+        v2 = l2[i] if i < len(l2) else 0
+
+        total = v1 + v2 + carry
+        carry = total // 10
+        result.append(total % 10)
+
+    if carry:
+        result.append(carry)
+
+    return result
+
+
+l1 = [2, 4, 3]
+l2 = [5, 6, 4]
+
+print(add_two_numbers(l1, l2))
+
+# leetcode problem: Longest Substring Without Repeating Characters
+
+
+class Solution(object):
+    def lengthOfLongestSubstring(self, s):
+        char_set = set()
+        left = 0
+        max_length = 0
+
+        for right in range(len(s)):
+            while s[right] in char_set:
+                char_set.remove(s[left])
+                left += 1
+
+            char_set.add(s[right])
+            max_length = max(max_length, right - left + 1)
+
+        return max_length
+
+
+# Test the function
+
+print(Solution().lengthOfLongestSubstring("abcabcbb"))
+
+
+class Solution(object):
+    def findMedianSortedArrays(self, nums1, nums2):
+        merged = sorted(nums1 + nums2)
+        n = len(merged)
+
+        if n % 2 == 1:
+            return float(merged[n // 2])
+        else:
+            return (merged[n // 2 - 1] + merged[n // 2]) / 2.0
+
+
+nums1 = [1, 3]
+nums2 = [2]
+print(Solution().findMedianSortedArrays(nums1, nums2))
+
+# leetcode problem: Longest Palindromic Substring
+
+
+class Solution(object):
+    def longestPalindrome(self, s):
+        if not s:
+            return ""
+
+        start, end = 0, 0
+
+        def expand(left, right):
+            while left >= 0 and right < len(s) and s[left] == s[right]:
+                left -= 1
+                right += 1
+            return right - left - 1  # length
+
+        for i in range(len(s)):
+            len1 = expand(i, i)  # odd length
+            len2 = expand(i, i + 1)  # even length
+
+            max_len = max(len1, len2)
+
+            if max_len > (end - start):
+                start = i - (max_len - 1) // 2
+                end = i + max_len // 2
+
+        return s[start : end + 1]
+
+
+print(Solution().longestPalindrome("babad"))
+
+# leetcode problem: ZigZag Conversion
+
+
+class Solution(object):
+    def convert(self, s, numRows):
+        if numRows == 1 or numRows >= len(s):
+            return s
+
+        rows = [""] * numRows
+        current_row = 0
+        going_down = False
+
+        for char in s:
+            rows[current_row] += char
+            if current_row == 0 or current_row == numRows - 1:
+                going_down = not going_down
+            current_row += 1 if going_down else -1
+
+        return "".join(rows)
+
+
+print(Solution().convert("PAYPALISHIRING", 3))
+
+# leetcode problem: Reverse Integer
+
+
+class Solution(object):
+    def reverse(self, x):
+        sign = -1 if x < 0 else 1
+        x_abs = abs(x)
+        reversed_str = str(x_abs)[::-1]
+        reversed_int = sign * int(reversed_str)
+
+        # Check for 32-bit signed integer overflow
+        if reversed_int < -(2**31) or reversed_int > 2**31 - 1:
+            return 0
+
+        return reversed_int
+
+
+print(Solution().reverse(123))
+
+# leetcode problem: String to Integer (atoi)
+
+
+class Solution(object):
+    def myAtoi(self, s):
+        s = s.strip()  # Remove leading/trailing whitespace
+        if not s:
+            return 0
+
+        sign = 1
+        start_index = 0
+
+        if s[0] in ["+", "-"]:
+            sign = -1 if s[0] == "-" else 1
+            start_index = 1
+
+        result = 0
+        for i in range(start_index, len(s)):
+            if not s[i].isdigit():
+                break
+            result = result * 10 + int(s[i])
+
+        result *= sign
+
+        # Clamp to 32-bit signed integer range
+        if result < -(2**31):
+            return -(2**31)
+        if result > 2**31 - 1:
+            return 2**31 - 1
+
+        return result
+
+
+print(Solution().myAtoi("   -42"))
+
+# leetcode problem: Palindrome Number
+
+
+class Solution(object):
+    def isPalindrome(self, x):
+        if x < 0:
+            return False
+        s = str(x)
+        return s == s[::-1]
+
+
+print(Solution().isPalindrome(121))
+
+# leetcode problem: Regular Expression Matching
+
+
+class Solution(object):
+    def isMatch(self, s, p):
+        if not p:
+            return not s
+
+        first_match = bool(s) and p[0] in {s[0], "."}
+
+        if len(p) >= 2 and p[1] == "*":
+            return self.isMatch(s, p[2:]) or (first_match and self.isMatch(s[1:], p))
+        else:
+            return first_match and self.isMatch(s[1:], p[1:])
+
+
+print(Solution().isMatch("aab", "c*a*b"))
