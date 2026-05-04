@@ -1687,3 +1687,300 @@ class Solution(object):
 
 
 print(Solution().isMatch("aab", "c*a*b"))
+
+# leetcode problem: Container With Most Water
+
+
+class Solution(object):
+    def maxArea(self, height):
+        left, right = 0, len(height) - 1
+        max_area = 0
+
+        while left < right:
+            width = right - left
+            current_area = min(height[left], height[right]) * width
+            max_area = max(max_area, current_area)
+
+            if height[left] < height[right]:
+                left += 1
+            else:
+                right -= 1
+
+        return max_area
+
+
+print(Solution().maxArea([1, 8, 6, 2, 5, 4, 8, 3, 7]))
+
+# leetcode problem: Integer to Roman
+
+
+class Solution(object):
+    def intToRoman(self, num):
+        val = [
+            1000,
+            900,
+            500,
+            400,
+            100,
+            90,
+            50,
+            40,
+            10,
+            9,
+            5,
+            4,
+            1,
+        ]
+        syms = [
+            "M",
+            "CM",
+            "D",
+            "CD",
+            "C",
+            "XC",
+            "L",
+            "XL",
+            "X",
+            "IX",
+            "V",
+            "IV",
+            "I",
+        ]
+        roman_num = ""
+        i = 0
+        while num > 0:
+            for _ in range(num // val[i]):
+                roman_num += syms[i]
+                num -= val[i]
+            i += 1
+        return roman_num
+
+
+print(Solution().intToRoman(1994))
+
+# leetcode problem: Roman to Integer
+
+
+class Solution(object):
+    def romanToInt(self, s):
+        roman_numerals = {
+            "I": 1,
+            "V": 5,
+            "X": 10,
+            "L": 50,
+            "C": 100,
+            "D": 500,
+            "M": 1000,
+        }
+        total = 0
+        prev_value = 0
+
+        for char in s:
+            value = roman_numerals[char]
+            if prev_value < value:
+                total += value - 2 * prev_value
+            else:
+                total += value
+            prev_value = value
+
+        return total
+
+
+print(Solution().romanToInt("MCMXCIV"))
+
+# leetcode problem: Longest Common Prefix
+
+
+class Solution(object):
+    def longestCommonPrefix(self, strs):
+        if not strs:
+            return ""
+
+        prefix = strs[0]
+
+        for s in strs[1:]:
+            while not s.startswith(prefix):
+                prefix = prefix[:-1]
+                if not prefix:
+                    return ""
+
+        return prefix
+
+
+print(Solution().longestCommonPrefix(["flower", "flow", "flight"]))
+
+# leetcode problem: 3Sum
+
+
+class Solution(object):
+    def threeSum(self, nums):
+        nums.sort()
+        result = []
+
+        for i in range(len(nums) - 2):
+            if i > 0 and nums[i] == nums[i - 1]:
+                continue
+
+            left, right = i + 1, len(nums) - 1
+            while left < right:
+                total = nums[i] + nums[left] + nums[right]
+                if total < 0:
+                    left += 1
+                elif total > 0:
+                    right -= 1
+                else:
+                    result.append([nums[i], nums[left], nums[right]])
+                    while left < right and nums[left] == nums[left + 1]:
+                        left += 1
+                    while left < right and nums[right] == nums[right - 1]:
+                        right -= 1
+                    left += 1
+                    right -= 1
+
+        return result
+
+
+print(Solution().threeSum([-1, 0, 1, 2, -1, -4]))
+
+# leetcode problem: 3Sum Closest
+
+
+class Solution(object):
+    def threeSumClosest(self, nums, target):
+        nums.sort()
+        closest_sum = float("inf")
+
+        for i in range(len(nums) - 2):
+            left, right = i + 1, len(nums) - 1
+            while left < right:
+                current_sum = nums[i] + nums[left] + nums[right]
+                if abs(current_sum - target) < abs(closest_sum - target):
+                    closest_sum = current_sum
+
+                if current_sum < target:
+                    left += 1
+                elif current_sum > target:
+                    right -= 1
+                else:
+                    return current_sum
+
+        return closest_sum
+
+
+print(Solution().threeSumClosest([-1, 2, 1, -4], 1))
+
+# leetcode problem: Letter Combinations of a Phone Number
+
+
+class Solution(object):
+    def letterCombinations(self, digits):
+        if not digits:
+            return []
+
+        phone_map = {
+            "2": "abc",
+            "3": "def",
+            "4": "ghi",
+            "5": "jkl",
+            "6": "mno",
+            "7": "pqrs",
+            "8": "tuv",
+            "9": "wxyz",
+        }
+
+        result = [""]
+
+        for digit in digits:
+            if digit not in phone_map:
+                continue
+            temp = []
+            for combination in result:
+                for char in phone_map[digit]:
+                    temp.append(combination + char)
+            result = temp
+
+        return result
+
+
+print(Solution().letterCombinations("23"))
+
+# leetcode problem: Valid Parentheses
+
+
+class Solution(object):
+    def isValid(self, s):
+        stack = []
+        mapping = {")": "(", "}": "{", "]": "["}
+
+        for char in s:
+            if char in mapping:
+                top_element = stack.pop() if stack else "#"
+                if mapping[char] != top_element:
+                    return False
+            else:
+                stack.append(char)
+
+        return not stack
+
+
+print(Solution().isValid("()[]{}"))
+
+# leetcode problem: Generate Parentheses
+
+
+class Solution(object):
+    def generateParenthesis(self, n):
+        result = []
+
+        def backtrack(s="", left=0, right=0):
+            if len(s) == 2 * n:
+                result.append(s)
+                return
+            if left < n:
+                backtrack(s + "(", left + 1, right)
+            if right < left:
+                backtrack(s + ")", left, right + 1)
+
+        backtrack()
+        return result
+
+
+print(Solution().generateParenthesis(3))
+
+# leetcode problem: Merge k Sorted Lists
+
+import heapq
+
+
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+
+class Solution(object):
+    def mergeKLists(self, lists):
+        min_heap = []
+        for i, node in enumerate(lists):
+            if node:
+                heapq.heappush(min_heap, (node.val, i, node))
+
+        dummy = ListNode()
+        current = dummy
+
+        while min_heap:
+            val, idx, node = heapq.heappop(min_heap)
+            current.next = ListNode(val)
+            current = current.next
+            if node.next:
+                heapq.heappush(min_heap, (node.next.val, idx, node.next))
+
+        return dummy.next
+
+
+# Example usage:
+list1 = ListNode(1, ListNode(4, ListNode(5)))
+list2 = ListNode(1, ListNode(3, ListNode(4)))
+list3 = ListNode(2, ListNode(6))
+lists = [list1, list2, list3]
+merged_head = Solution().mergeKLists(lists)
