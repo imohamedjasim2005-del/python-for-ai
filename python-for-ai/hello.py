@@ -1984,3 +1984,273 @@ list2 = ListNode(1, ListNode(3, ListNode(4)))
 list3 = ListNode(2, ListNode(6))
 lists = [list1, list2, list3]
 merged_head = Solution().mergeKLists(lists)
+
+# leetcode problem: Swap Nodes in Pairs
+
+
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+
+class Solution(object):
+    def swapPairs(self, head):
+        dummy = ListNode(0)
+        dummy.next = head
+        current = dummy
+
+        while current.next and current.next.next:
+            first = current.next
+            second = current.next.next
+
+            # Swap
+            current.next, first.next, second.next = second, second.next, first
+
+            # Move to the next pair
+            current = first
+
+        return dummy.next
+
+
+# Example usage:
+head = ListNode(1, ListNode(2, ListNode(3, ListNode(4))))
+swapped_head = Solution().swapPairs(head)
+
+# leetcode problem: Reverse Nodes in k-Group
+
+
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+
+class Solution(object):
+    def reverseKGroup(self, head, k):
+        dummy = ListNode(0)
+        dummy.next = head
+        group_prev = dummy
+
+        while True:
+            kth = self.getKthNode(group_prev, k)
+            if not kth:
+                break
+            group_next = kth.next
+
+            # Reverse group
+            prev, current = kth.next, group_prev.next
+            while current != group_next:
+                temp = current.next
+                current.next = prev
+                prev = current
+                current = temp
+
+            temp = group_prev.next
+            group_prev.next = kth
+            group_prev = temp
+
+        return dummy.next
+
+    def getKthNode(self, current, k):
+        while current and k > 0:
+            current = current.next
+            k -= 1
+        return current
+
+
+# Example usage:
+head = ListNode(1, ListNode(2, ListNode(3, ListNode(4, ListNode(5)))))
+k = 2
+reversed_head = Solution().reverseKGroup(head, k)
+
+# leetcode problem: Remove Nth Node From End of List
+
+
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+
+class Solution(object):
+    def removeNthFromEnd(self, head, n):
+        dummy = ListNode(0)
+        dummy.next = head
+        fast = slow = dummy
+
+        for _ in range(n + 1):
+            fast = fast.next
+
+        while fast:
+            fast = fast.next
+            slow = slow.next
+
+        slow.next = slow.next.next
+        return dummy.next
+
+
+# Example usage:
+head = ListNode(1, ListNode(2, ListNode(3, ListNode(4, ListNode(5)))))
+n = 2
+updated_head = Solution().removeNthFromEnd(head, n)
+
+# leetcode problem: Valid Sudoku
+
+
+class Solution(object):
+    def isValidSudoku(self, board):
+        rows = [set() for _ in range(9)]
+        cols = [set() for _ in range(9)]
+        boxes = [set() for _ in range(9)]
+
+        for r in range(9):
+            for c in range(9):
+                num = board[r][c]
+                if num == ".":
+                    continue
+
+                if (
+                    num in rows[r]
+                    or num in cols[c]
+                    or num in boxes[(r // 3) * 3 + (c // 3)]
+                ):
+                    return False
+
+                rows[r].add(num)
+                cols[c].add(num)
+                boxes[(r // 3) * 3 + (c // 3)].add(num)
+
+        return True
+
+
+# Example usage:
+sudoku_board = [
+    ["5", "3", ".", ".", "7", ".", ".", ".", "."],
+    ["6", ".", ".", "1", "9", "5", ".", ".", "."],
+    [".", "9", "8", ".", ".", ".", ".", "6", "."],
+    ["8", ".", ".", ".", "6", ".", ".", ".", "3"],
+    ["4", ".", "8", "8", "6", "3", ".", ".", "1"],
+    ["7", ".", ".", ".", "2", ".", ".", ".", "6"],
+    [".", "6", ".", ".", ".", ".", "2", "8", "."],
+    [".", ".", ".", "4", "1", "9", ".", ".", "5"],
+    [".", ".", ".", ".", "8", ".", ".", "7", "9"],
+]
+is_valid = Solution().isValidSudoku(sudoku_board)
+
+# leetcode problem: Sudoku Solver
+
+
+class Solution(object):
+    def solveSudoku(self, board):
+        self.solve(board)
+
+    def solve(self, board):
+        for r in range(9):
+            for c in range(9):
+                if board[r][c] == ".":
+                    for num in "123456789":
+                        if self.isValid(board, r, c, num):
+                            board[r][c] = num
+                            if self.solve(board):
+                                return True
+                            board[r][c] = "."
+                    return False
+        return True
+
+    def isValid(self, board, row, col, num):
+        for i in range(9):
+            if (
+                board[row][i] == num
+                or board[i][col] == num
+                or board[(row // 3) * 3 + i // 3][(col // 3) * 3 + i % 3] == num
+            ):
+                return False
+        return True
+
+
+# Example usage:
+sudoku_board = [
+    ["5", "3", ".", ".", "7", ".", ".", ".", "."],
+    ["6", ".", ".", "1", "9", "5", ".", ".", "."],
+    [".", "9", "8", ".", ".", ".", ".", "6", "."],
+    ["8", ".", ".", ".", "6", ".", ".", ".", "3"],
+    ["4", ".", "8", "8", "6", "3", ".", ".", "1"],
+    ["7", ".", ".", ".", "2", ".", ".", "6", "9"],
+    [".", "6", ".", ".", ".", ".", "2", "8", "."],
+    [".", ".", ".", "4", "1", "9", ".", ".", "5"],
+    [".", ".", ".", ".", "8", ".", ".", "7", "9"],
+]
+Solution().solveSudoku(sudoku_board)
+
+# leetcode problem: N-Queens
+
+
+class Solution(object):
+    def solveNQueens(self, n):
+        def is_safe(board, row, col):
+            # Check this column
+            for i in range(row):
+                if board[i] == col:
+                    return False
+            # Check upper left diagonal
+            for i in range(row):
+                if board[i] == col - (row - i):
+                    return False
+            # Check upper right diagonal
+            for i in range(row):
+                if board[i] == col + (row - i):
+                    return False
+            return True
+
+        def backtrack(board, row):
+            if row == n:
+                solutions.append([
+                    "." * col + "Q" + "." * (n - col - 1) for col in board
+                ])
+                return
+            for col in range(n):
+                if is_safe(board, row, col):
+                    board[row] = col
+                    backtrack(board, row + 1)
+                    board[row] = -1
+
+        solutions = []
+        backtrack([-1] * n, 0)
+        return solutions
+
+
+print(Solution().solveNQueens(4))
+
+# leetcode problem: N-Queens II
+
+
+class Solution(object):
+    def totalNQueens(self, n):
+        def is_safe(board, row, col):
+            for i in range(row):
+                if board[i] == col:
+                    return False
+            for i in range(row):
+                if board[i] == col - (row - i):
+                    return False
+            for i in range(row):
+                if board[i] == col + (row - i):
+                    return False
+            return True
+
+        def backtrack(board, row):
+            if row == n:
+                return 1
+            count = 0
+            for col in range(n):
+                if is_safe(board, row, col):
+                    board[row] = col
+                    count += backtrack(board, row + 1)
+                    board[row] = -1
+            return count
+
+        return backtrack([-1] * n, 0)
+
+
+print(Solution().totalNQueens(4))
