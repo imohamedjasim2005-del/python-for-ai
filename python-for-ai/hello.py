@@ -2254,3 +2254,220 @@ class Solution(object):
 
 
 print(Solution().totalNQueens(4))
+
+# leetcode problem: valid number
+
+
+class Solution(object):
+    def isNumber(self, s):
+        s = s.strip()
+        if not s:
+            return False
+
+        num_seen = False
+        dot_seen = False
+        e_seen = False
+
+        for i, char in enumerate(s):
+            if char.isdigit():
+                num_seen = True
+            elif char in ["+", "-"]:
+                if i > 0 and s[i - 1] not in ["e", "E"]:
+                    return False
+            elif char == ".":
+                if dot_seen or e_seen:
+                    return False
+                dot_seen = True
+            elif char in ["e", "E"]:
+                if e_seen or not num_seen:
+                    return False
+                e_seen = True
+                num_seen = False  # reset for exponent part
+            else:
+                return False
+
+        return num_seen
+
+
+print(Solution().isNumber("0"))
+
+
+# leetcode problem: string to integer (atoi)
+class Solution(object):
+    def myAtoi(self, s):
+        s = s.strip()
+        if not s:
+            return 0
+
+        sign = 1
+        start_index = 0
+
+        if s[0] in ["+", "-"]:
+            sign = -1 if s[0] == "-" else 1
+            start_index = 1
+
+        result = 0
+        for i in range(start_index, len(s)):
+            if not s[i].isdigit():
+                break
+            result = result * 10 + int(s[i])
+
+        result *= sign
+
+        if result < -(2**31):
+            return -(2**31)
+        if result > 2**31 - 1:
+            return 2**31 - 1
+
+        return result
+
+
+print(Solution().myAtoi("   -42"))
+
+# leetcode problem: Text Justification
+
+
+class Solution(object):
+    def fullJustify(self, words, maxWidth):
+        res = []
+        current_line = []
+        num_of_letters = 0
+
+        for word in words:
+            if num_of_letters + len(word) + len(current_line) > maxWidth:
+                for i in range(maxWidth - num_of_letters):
+                    current_line[i % (len(current_line) - 1 or 1)] += " "
+                res.append("".join(current_line))
+                current_line = []
+                num_of_letters = 0
+            current_line.append(word)
+            num_of_letters += len(word)
+
+        return res + [" ".join(current_line).ljust(maxWidth)]
+
+
+print(
+    Solution().fullJustify(
+        ["This", "is", "an", "example", "of", "text", "justification."], 16
+    )
+)
+
+# leetcode problem: Minimum Window Substring
+
+
+class Solution(object):
+    def minWindow(self, s, t):
+        if not s or not t:
+            return ""
+
+        dict_t = {}
+        for char in t:
+            dict_t[char] = dict_t.get(char, 0) + 1
+
+        required = len(dict_t)
+        formed = 0
+        window_counts = {}
+        l, r = 0, 0
+        ans = float("inf"), None, None
+
+        while r < len(s):
+            character = s[r]
+            window_counts[character] = window_counts.get(character, 0) + 1
+
+            if character in dict_t and window_counts[character] == dict_t[character]:
+                formed += 1
+
+            while l <= r and formed == required:
+                character = s[l]
+
+                if r - l + 1 < ans[0]:
+                    ans = (r - l + 1, l, r)
+
+                window_counts[character] -= 1
+                if character in dict_t and window_counts[character] < dict_t[character]:
+                    formed -= 1
+
+                l += 1
+
+            r += 1
+
+        return "" if ans[0] == float("inf") else s[ans[1] : ans[2] + 1]
+
+
+print(Solution().minWindow("ADOBECODEBANC", "ABC"))
+
+# leetcode problem: Longest Substring with At Most K Distinct Characters
+
+
+class Solution(object):
+    def lengthOfLongestSubstringKDistinct(self, s, k):
+        if k == 0:
+            return 0
+
+        left = 0
+        right = 0
+        char_count = {}
+        max_length = 0
+
+        while right < len(s):
+            char_count[s[right]] = char_count.get(s[right], 0) + 1
+
+            while len(char_count) > k:
+                char_count[s[left]] -= 1
+                if char_count[s[left]] == 0:
+                    del char_count[s[left]]
+                left += 1
+
+            max_length = max(max_length, right - left + 1)
+            right += 1
+
+        return max_length
+
+
+print(Solution().lengthOfLongestSubstringKDistinct("eceba", 2))
+
+# leetcode problem: Smallest Substring With Identical Characters I
+
+
+class Solution(object):
+    def smallestSubstring(self, s):
+        from collections import Counter
+
+        char_count = Counter(s)
+        required = len(char_count)
+        formed = 0
+        window_counts = {}
+        l, r = 0, 0
+        ans = float("inf"), None, None
+
+        while r < len(s):
+            character = s[r]
+            window_counts[character] = window_counts.get(character, 0) + 1
+
+            if (
+                character in char_count
+                and window_counts[character] == char_count[character]
+            ):
+                formed += 1
+
+            while l <= r and formed == required:
+                character = s[l]
+
+                if r - l + 1 < ans[0]:
+                    ans = (r - l + 1, l, r)
+
+                window_counts[character] -= 1
+                if (
+                    character in char_count
+                    and window_counts[character] < char_count[character]
+                ):
+                    formed -= 1
+
+                l += 1
+
+            r += 1
+
+        return "" if ans[0] == float("inf") else s[ans[1] : ans[2] + 1]
+
+
+print(Solution().smallestSubstring("aabcbcdbca"))
