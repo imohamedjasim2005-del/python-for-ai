@@ -2471,3 +2471,58 @@ class Solution(object):
 
 
 print(Solution().smallestSubstring("aabcbcdbca"))
+
+# leetcode problem: Longest Substring with At Most Two Distinct Characters
+
+
+class Solution(object):
+    def lengthOfLongestSubstringTwoDistinct(self, s):
+        left = 0
+        right = 0
+        char_count = {}
+        max_length = 0
+
+        while right < len(s):
+            char_count[s[right]] = char_count.get(s[right], 0) + 1
+
+            while len(char_count) > 2:
+                char_count[s[left]] -= 1
+                if char_count[s[left]] == 0:
+                    del char_count[s[left]]
+                left += 1
+
+            max_length = max(max_length, right - left + 1)
+            right += 1
+
+        return max_length
+
+
+print(Solution().lengthOfLongestSubstringTwoDistinct("eceba"))
+
+# leetcode problem: Minimum Moves to Make Array Complementary
+
+
+class Solution(object):
+    def minMoves(self, nums, limit):
+        from collections import Counter
+
+        count = Counter()
+        n = len(nums)
+
+        for i in range(n // 2):
+            a, b = nums[i], nums[n - 1 - i]
+            count[a + b] += 1
+            count[min(a, b) + 1] -= 1
+            count[max(a, b) + limit + 1] -= 1
+
+        moves = float("inf")
+        current_moves = 0
+
+        for x in range(2, 2 * limit + 1):
+            current_moves += count[x]
+            moves = min(moves, current_moves)
+
+        return moves
+
+
+print(Solution().minMoves([1, 2, 4, 3], 4))
