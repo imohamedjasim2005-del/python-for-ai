@@ -876,13 +876,11 @@ import pandas as pd
 daily_data = data["daily"]
 
 # Create a DataFrame
-df = pd.DataFrame(
-    {
-        "date": daily_data["time"],
-        "max_temp": daily_data["temperature_2m_max"],
-        "min_temp": daily_data["temperature_2m_min"],
-    }
-)
+df = pd.DataFrame({
+    "date": daily_data["time"],
+    "max_temp": daily_data["temperature_2m_max"],
+    "min_temp": daily_data["temperature_2m_min"],
+})
 
 # Convert date strings to datetime
 df["date"] = pd.to_datetime(df["date"])
@@ -1462,3 +1460,1014 @@ def scientific_calculator():
 
 
 scientific_calculator()
+
+# leetcode problem: Two Sum
+
+
+def two_sum(nums, target):
+    seen = {}  # value -> index
+
+    for i, num in enumerate(nums):
+        complement = target - num
+
+        if complement in seen:
+            return [seen[complement], i]
+
+        seen[num] = i
+
+    return []  # fallback (though problem guarantees one solution)
+
+
+nums = [2, 7, 11, 15]
+target = 9
+
+print(two_sum(nums, target))
+
+# leetcode problem: Add Two Numbers (using lists to represent linked lists)
+
+
+def add_two_numbers(l1, l2):
+    result = []
+    carry = 0
+
+    for i in range(max(len(l1), len(l2))):
+        v1 = l1[i] if i < len(l1) else 0
+        v2 = l2[i] if i < len(l2) else 0
+
+        total = v1 + v2 + carry
+        carry = total // 10
+        result.append(total % 10)
+
+    if carry:
+        result.append(carry)
+
+    return result
+
+
+l1 = [2, 4, 3]
+l2 = [5, 6, 4]
+
+print(add_two_numbers(l1, l2))
+
+# leetcode problem: Longest Substring Without Repeating Characters
+
+
+class Solution(object):
+    def lengthOfLongestSubstring(self, s):
+        char_set = set()
+        left = 0
+        max_length = 0
+
+        for right in range(len(s)):
+            while s[right] in char_set:
+                char_set.remove(s[left])
+                left += 1
+
+            char_set.add(s[right])
+            max_length = max(max_length, right - left + 1)
+
+        return max_length
+
+
+# Test the function
+
+print(Solution().lengthOfLongestSubstring("abcabcbb"))
+
+
+class Solution(object):
+    def findMedianSortedArrays(self, nums1, nums2):
+        merged = sorted(nums1 + nums2)
+        n = len(merged)
+
+        if n % 2 == 1:
+            return float(merged[n // 2])
+        else:
+            return (merged[n // 2 - 1] + merged[n // 2]) / 2.0
+
+
+nums1 = [1, 3]
+nums2 = [2]
+print(Solution().findMedianSortedArrays(nums1, nums2))
+
+# leetcode problem: Longest Palindromic Substring
+
+
+class Solution(object):
+    def longestPalindrome(self, s):
+        if not s:
+            return ""
+
+        start, end = 0, 0
+
+        def expand(left, right):
+            while left >= 0 and right < len(s) and s[left] == s[right]:
+                left -= 1
+                right += 1
+            return right - left - 1  # length
+
+        for i in range(len(s)):
+            len1 = expand(i, i)  # odd length
+            len2 = expand(i, i + 1)  # even length
+
+            max_len = max(len1, len2)
+
+            if max_len > (end - start):
+                start = i - (max_len - 1) // 2
+                end = i + max_len // 2
+
+        return s[start : end + 1]
+
+
+print(Solution().longestPalindrome("babad"))
+
+# leetcode problem: ZigZag Conversion
+
+
+class Solution(object):
+    def convert(self, s, numRows):
+        if numRows == 1 or numRows >= len(s):
+            return s
+
+        rows = [""] * numRows
+        current_row = 0
+        going_down = False
+
+        for char in s:
+            rows[current_row] += char
+            if current_row == 0 or current_row == numRows - 1:
+                going_down = not going_down
+            current_row += 1 if going_down else -1
+
+        return "".join(rows)
+
+
+print(Solution().convert("PAYPALISHIRING", 3))
+
+# leetcode problem: Reverse Integer
+
+
+class Solution(object):
+    def reverse(self, x):
+        sign = -1 if x < 0 else 1
+        x_abs = abs(x)
+        reversed_str = str(x_abs)[::-1]
+        reversed_int = sign * int(reversed_str)
+
+        # Check for 32-bit signed integer overflow
+        if reversed_int < -(2**31) or reversed_int > 2**31 - 1:
+            return 0
+
+        return reversed_int
+
+
+print(Solution().reverse(123))
+
+# leetcode problem: String to Integer (atoi)
+
+
+class Solution(object):
+    def myAtoi(self, s):
+        s = s.strip()  # Remove leading/trailing whitespace
+        if not s:
+            return 0
+
+        sign = 1
+        start_index = 0
+
+        if s[0] in ["+", "-"]:
+            sign = -1 if s[0] == "-" else 1
+            start_index = 1
+
+        result = 0
+        for i in range(start_index, len(s)):
+            if not s[i].isdigit():
+                break
+            result = result * 10 + int(s[i])
+
+        result *= sign
+
+        # Clamp to 32-bit signed integer range
+        if result < -(2**31):
+            return -(2**31)
+        if result > 2**31 - 1:
+            return 2**31 - 1
+
+        return result
+
+
+print(Solution().myAtoi("   -42"))
+
+# leetcode problem: Palindrome Number
+
+
+class Solution(object):
+    def isPalindrome(self, x):
+        if x < 0:
+            return False
+        s = str(x)
+        return s == s[::-1]
+
+
+print(Solution().isPalindrome(121))
+
+# leetcode problem: Regular Expression Matching
+
+
+class Solution(object):
+    def isMatch(self, s, p):
+        if not p:
+            return not s
+
+        first_match = bool(s) and p[0] in {s[0], "."}
+
+        if len(p) >= 2 and p[1] == "*":
+            return self.isMatch(s, p[2:]) or (first_match and self.isMatch(s[1:], p))
+        else:
+            return first_match and self.isMatch(s[1:], p[1:])
+
+
+print(Solution().isMatch("aab", "c*a*b"))
+
+# leetcode problem: Container With Most Water
+
+
+class Solution(object):
+    def maxArea(self, height):
+        left, right = 0, len(height) - 1
+        max_area = 0
+
+        while left < right:
+            width = right - left
+            current_area = min(height[left], height[right]) * width
+            max_area = max(max_area, current_area)
+
+            if height[left] < height[right]:
+                left += 1
+            else:
+                right -= 1
+
+        return max_area
+
+
+print(Solution().maxArea([1, 8, 6, 2, 5, 4, 8, 3, 7]))
+
+# leetcode problem: Integer to Roman
+
+
+class Solution(object):
+    def intToRoman(self, num):
+        val = [
+            1000,
+            900,
+            500,
+            400,
+            100,
+            90,
+            50,
+            40,
+            10,
+            9,
+            5,
+            4,
+            1,
+        ]
+        syms = [
+            "M",
+            "CM",
+            "D",
+            "CD",
+            "C",
+            "XC",
+            "L",
+            "XL",
+            "X",
+            "IX",
+            "V",
+            "IV",
+            "I",
+        ]
+        roman_num = ""
+        i = 0
+        while num > 0:
+            for _ in range(num // val[i]):
+                roman_num += syms[i]
+                num -= val[i]
+            i += 1
+        return roman_num
+
+
+print(Solution().intToRoman(1994))
+
+# leetcode problem: Roman to Integer
+
+
+class Solution(object):
+    def romanToInt(self, s):
+        roman_numerals = {
+            "I": 1,
+            "V": 5,
+            "X": 10,
+            "L": 50,
+            "C": 100,
+            "D": 500,
+            "M": 1000,
+        }
+        total = 0
+        prev_value = 0
+
+        for char in s:
+            value = roman_numerals[char]
+            if prev_value < value:
+                total += value - 2 * prev_value
+            else:
+                total += value
+            prev_value = value
+
+        return total
+
+
+print(Solution().romanToInt("MCMXCIV"))
+
+# leetcode problem: Longest Common Prefix
+
+
+class Solution(object):
+    def longestCommonPrefix(self, strs):
+        if not strs:
+            return ""
+
+        prefix = strs[0]
+
+        for s in strs[1:]:
+            while not s.startswith(prefix):
+                prefix = prefix[:-1]
+                if not prefix:
+                    return ""
+
+        return prefix
+
+
+print(Solution().longestCommonPrefix(["flower", "flow", "flight"]))
+
+# leetcode problem: 3Sum
+
+
+class Solution(object):
+    def threeSum(self, nums):
+        nums.sort()
+        result = []
+
+        for i in range(len(nums) - 2):
+            if i > 0 and nums[i] == nums[i - 1]:
+                continue
+
+            left, right = i + 1, len(nums) - 1
+            while left < right:
+                total = nums[i] + nums[left] + nums[right]
+                if total < 0:
+                    left += 1
+                elif total > 0:
+                    right -= 1
+                else:
+                    result.append([nums[i], nums[left], nums[right]])
+                    while left < right and nums[left] == nums[left + 1]:
+                        left += 1
+                    while left < right and nums[right] == nums[right - 1]:
+                        right -= 1
+                    left += 1
+                    right -= 1
+
+        return result
+
+
+print(Solution().threeSum([-1, 0, 1, 2, -1, -4]))
+
+# leetcode problem: 3Sum Closest
+
+
+class Solution(object):
+    def threeSumClosest(self, nums, target):
+        nums.sort()
+        closest_sum = float("inf")
+
+        for i in range(len(nums) - 2):
+            left, right = i + 1, len(nums) - 1
+            while left < right:
+                current_sum = nums[i] + nums[left] + nums[right]
+                if abs(current_sum - target) < abs(closest_sum - target):
+                    closest_sum = current_sum
+
+                if current_sum < target:
+                    left += 1
+                elif current_sum > target:
+                    right -= 1
+                else:
+                    return current_sum
+
+        return closest_sum
+
+
+print(Solution().threeSumClosest([-1, 2, 1, -4], 1))
+
+# leetcode problem: Letter Combinations of a Phone Number
+
+
+class Solution(object):
+    def letterCombinations(self, digits):
+        if not digits:
+            return []
+
+        phone_map = {
+            "2": "abc",
+            "3": "def",
+            "4": "ghi",
+            "5": "jkl",
+            "6": "mno",
+            "7": "pqrs",
+            "8": "tuv",
+            "9": "wxyz",
+        }
+
+        result = [""]
+
+        for digit in digits:
+            if digit not in phone_map:
+                continue
+            temp = []
+            for combination in result:
+                for char in phone_map[digit]:
+                    temp.append(combination + char)
+            result = temp
+
+        return result
+
+
+print(Solution().letterCombinations("23"))
+
+# leetcode problem: Valid Parentheses
+
+
+class Solution(object):
+    def isValid(self, s):
+        stack = []
+        mapping = {")": "(", "}": "{", "]": "["}
+
+        for char in s:
+            if char in mapping:
+                top_element = stack.pop() if stack else "#"
+                if mapping[char] != top_element:
+                    return False
+            else:
+                stack.append(char)
+
+        return not stack
+
+
+print(Solution().isValid("()[]{}"))
+
+# leetcode problem: Generate Parentheses
+
+
+class Solution(object):
+    def generateParenthesis(self, n):
+        result = []
+
+        def backtrack(s="", left=0, right=0):
+            if len(s) == 2 * n:
+                result.append(s)
+                return
+            if left < n:
+                backtrack(s + "(", left + 1, right)
+            if right < left:
+                backtrack(s + ")", left, right + 1)
+
+        backtrack()
+        return result
+
+
+print(Solution().generateParenthesis(3))
+
+# leetcode problem: Merge k Sorted Lists
+
+import heapq
+
+
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+
+class Solution(object):
+    def mergeKLists(self, lists):
+        min_heap = []
+        for i, node in enumerate(lists):
+            if node:
+                heapq.heappush(min_heap, (node.val, i, node))
+
+        dummy = ListNode()
+        current = dummy
+
+        while min_heap:
+            val, idx, node = heapq.heappop(min_heap)
+            current.next = ListNode(val)
+            current = current.next
+            if node.next:
+                heapq.heappush(min_heap, (node.next.val, idx, node.next))
+
+        return dummy.next
+
+
+# Example usage:
+list1 = ListNode(1, ListNode(4, ListNode(5)))
+list2 = ListNode(1, ListNode(3, ListNode(4)))
+list3 = ListNode(2, ListNode(6))
+lists = [list1, list2, list3]
+merged_head = Solution().mergeKLists(lists)
+
+# leetcode problem: Swap Nodes in Pairs
+
+
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+
+class Solution(object):
+    def swapPairs(self, head):
+        dummy = ListNode(0)
+        dummy.next = head
+        current = dummy
+
+        while current.next and current.next.next:
+            first = current.next
+            second = current.next.next
+
+            # Swap
+            current.next, first.next, second.next = second, second.next, first
+
+            # Move to the next pair
+            current = first
+
+        return dummy.next
+
+
+# Example usage:
+head = ListNode(1, ListNode(2, ListNode(3, ListNode(4))))
+swapped_head = Solution().swapPairs(head)
+
+# leetcode problem: Reverse Nodes in k-Group
+
+
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+
+class Solution(object):
+    def reverseKGroup(self, head, k):
+        dummy = ListNode(0)
+        dummy.next = head
+        group_prev = dummy
+
+        while True:
+            kth = self.getKthNode(group_prev, k)
+            if not kth:
+                break
+            group_next = kth.next
+
+            # Reverse group
+            prev, current = kth.next, group_prev.next
+            while current != group_next:
+                temp = current.next
+                current.next = prev
+                prev = current
+                current = temp
+
+            temp = group_prev.next
+            group_prev.next = kth
+            group_prev = temp
+
+        return dummy.next
+
+    def getKthNode(self, current, k):
+        while current and k > 0:
+            current = current.next
+            k -= 1
+        return current
+
+
+# Example usage:
+head = ListNode(1, ListNode(2, ListNode(3, ListNode(4, ListNode(5)))))
+k = 2
+reversed_head = Solution().reverseKGroup(head, k)
+
+# leetcode problem: Remove Nth Node From End of List
+
+
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+
+class Solution(object):
+    def removeNthFromEnd(self, head, n):
+        dummy = ListNode(0)
+        dummy.next = head
+        fast = slow = dummy
+
+        for _ in range(n + 1):
+            fast = fast.next
+
+        while fast:
+            fast = fast.next
+            slow = slow.next
+
+        slow.next = slow.next.next
+        return dummy.next
+
+
+# Example usage:
+head = ListNode(1, ListNode(2, ListNode(3, ListNode(4, ListNode(5)))))
+n = 2
+updated_head = Solution().removeNthFromEnd(head, n)
+
+# leetcode problem: Valid Sudoku
+
+
+class Solution(object):
+    def isValidSudoku(self, board):
+        rows = [set() for _ in range(9)]
+        cols = [set() for _ in range(9)]
+        boxes = [set() for _ in range(9)]
+
+        for r in range(9):
+            for c in range(9):
+                num = board[r][c]
+                if num == ".":
+                    continue
+
+                if (
+                    num in rows[r]
+                    or num in cols[c]
+                    or num in boxes[(r // 3) * 3 + (c // 3)]
+                ):
+                    return False
+
+                rows[r].add(num)
+                cols[c].add(num)
+                boxes[(r // 3) * 3 + (c // 3)].add(num)
+
+        return True
+
+
+# Example usage:
+sudoku_board = [
+    ["5", "3", ".", ".", "7", ".", ".", ".", "."],
+    ["6", ".", ".", "1", "9", "5", ".", ".", "."],
+    [".", "9", "8", ".", ".", ".", ".", "6", "."],
+    ["8", ".", ".", ".", "6", ".", ".", ".", "3"],
+    ["4", ".", "8", "8", "6", "3", ".", ".", "1"],
+    ["7", ".", ".", ".", "2", ".", ".", ".", "6"],
+    [".", "6", ".", ".", ".", ".", "2", "8", "."],
+    [".", ".", ".", "4", "1", "9", ".", ".", "5"],
+    [".", ".", ".", ".", "8", ".", ".", "7", "9"],
+]
+is_valid = Solution().isValidSudoku(sudoku_board)
+
+# leetcode problem: Sudoku Solver
+
+
+class Solution(object):
+    def solveSudoku(self, board):
+        self.solve(board)
+
+    def solve(self, board):
+        for r in range(9):
+            for c in range(9):
+                if board[r][c] == ".":
+                    for num in "123456789":
+                        if self.isValid(board, r, c, num):
+                            board[r][c] = num
+                            if self.solve(board):
+                                return True
+                            board[r][c] = "."
+                    return False
+        return True
+
+    def isValid(self, board, row, col, num):
+        for i in range(9):
+            if (
+                board[row][i] == num
+                or board[i][col] == num
+                or board[(row // 3) * 3 + i // 3][(col // 3) * 3 + i % 3] == num
+            ):
+                return False
+        return True
+
+
+# Example usage:
+sudoku_board = [
+    ["5", "3", ".", ".", "7", ".", ".", ".", "."],
+    ["6", ".", ".", "1", "9", "5", ".", ".", "."],
+    [".", "9", "8", ".", ".", ".", ".", "6", "."],
+    ["8", ".", ".", ".", "6", ".", ".", ".", "3"],
+    ["4", ".", "8", "8", "6", "3", ".", ".", "1"],
+    ["7", ".", ".", ".", "2", ".", ".", "6", "9"],
+    [".", "6", ".", ".", ".", ".", "2", "8", "."],
+    [".", ".", ".", "4", "1", "9", ".", ".", "5"],
+    [".", ".", ".", ".", "8", ".", ".", "7", "9"],
+]
+Solution().solveSudoku(sudoku_board)
+
+# leetcode problem: N-Queens
+
+
+class Solution(object):
+    def solveNQueens(self, n):
+        def is_safe(board, row, col):
+            # Check this column
+            for i in range(row):
+                if board[i] == col:
+                    return False
+            # Check upper left diagonal
+            for i in range(row):
+                if board[i] == col - (row - i):
+                    return False
+            # Check upper right diagonal
+            for i in range(row):
+                if board[i] == col + (row - i):
+                    return False
+            return True
+
+        def backtrack(board, row):
+            if row == n:
+                solutions.append([
+                    "." * col + "Q" + "." * (n - col - 1) for col in board
+                ])
+                return
+            for col in range(n):
+                if is_safe(board, row, col):
+                    board[row] = col
+                    backtrack(board, row + 1)
+                    board[row] = -1
+
+        solutions = []
+        backtrack([-1] * n, 0)
+        return solutions
+
+
+print(Solution().solveNQueens(4))
+
+# leetcode problem: N-Queens II
+
+
+class Solution(object):
+    def totalNQueens(self, n):
+        def is_safe(board, row, col):
+            for i in range(row):
+                if board[i] == col:
+                    return False
+            for i in range(row):
+                if board[i] == col - (row - i):
+                    return False
+            for i in range(row):
+                if board[i] == col + (row - i):
+                    return False
+            return True
+
+        def backtrack(board, row):
+            if row == n:
+                return 1
+            count = 0
+            for col in range(n):
+                if is_safe(board, row, col):
+                    board[row] = col
+                    count += backtrack(board, row + 1)
+                    board[row] = -1
+            return count
+
+        return backtrack([-1] * n, 0)
+
+
+print(Solution().totalNQueens(4))
+
+# leetcode problem: valid number
+
+
+class Solution(object):
+    def isNumber(self, s):
+        s = s.strip()
+        if not s:
+            return False
+
+        num_seen = False
+        dot_seen = False
+        e_seen = False
+
+        for i, char in enumerate(s):
+            if char.isdigit():
+                num_seen = True
+            elif char in ["+", "-"]:
+                if i > 0 and s[i - 1] not in ["e", "E"]:
+                    return False
+            elif char == ".":
+                if dot_seen or e_seen:
+                    return False
+                dot_seen = True
+            elif char in ["e", "E"]:
+                if e_seen or not num_seen:
+                    return False
+                e_seen = True
+                num_seen = False  # reset for exponent part
+            else:
+                return False
+
+        return num_seen
+
+
+print(Solution().isNumber("0"))
+
+
+# leetcode problem: string to integer (atoi)
+class Solution(object):
+    def myAtoi(self, s):
+        s = s.strip()
+        if not s:
+            return 0
+
+        sign = 1
+        start_index = 0
+
+        if s[0] in ["+", "-"]:
+            sign = -1 if s[0] == "-" else 1
+            start_index = 1
+
+        result = 0
+        for i in range(start_index, len(s)):
+            if not s[i].isdigit():
+                break
+            result = result * 10 + int(s[i])
+
+        result *= sign
+
+        if result < -(2**31):
+            return -(2**31)
+        if result > 2**31 - 1:
+            return 2**31 - 1
+
+        return result
+
+
+print(Solution().myAtoi("   -42"))
+
+# leetcode problem: Text Justification
+
+
+class Solution(object):
+    def fullJustify(self, words, maxWidth):
+        res = []
+        current_line = []
+        num_of_letters = 0
+
+        for word in words:
+            if num_of_letters + len(word) + len(current_line) > maxWidth:
+                for i in range(maxWidth - num_of_letters):
+                    current_line[i % (len(current_line) - 1 or 1)] += " "
+                res.append("".join(current_line))
+                current_line = []
+                num_of_letters = 0
+            current_line.append(word)
+            num_of_letters += len(word)
+
+        return res + [" ".join(current_line).ljust(maxWidth)]
+
+
+print(
+    Solution().fullJustify(
+        ["This", "is", "an", "example", "of", "text", "justification."], 16
+    )
+)
+
+# leetcode problem: Minimum Window Substring
+
+
+class Solution(object):
+    def minWindow(self, s, t):
+        if not s or not t:
+            return ""
+
+        dict_t = {}
+        for char in t:
+            dict_t[char] = dict_t.get(char, 0) + 1
+
+        required = len(dict_t)
+        formed = 0
+        window_counts = {}
+        l, r = 0, 0
+        ans = float("inf"), None, None
+
+        while r < len(s):
+            character = s[r]
+            window_counts[character] = window_counts.get(character, 0) + 1
+
+            if character in dict_t and window_counts[character] == dict_t[character]:
+                formed += 1
+
+            while l <= r and formed == required:
+                character = s[l]
+
+                if r - l + 1 < ans[0]:
+                    ans = (r - l + 1, l, r)
+
+                window_counts[character] -= 1
+                if character in dict_t and window_counts[character] < dict_t[character]:
+                    formed -= 1
+
+                l += 1
+
+            r += 1
+
+        return "" if ans[0] == float("inf") else s[ans[1] : ans[2] + 1]
+
+
+print(Solution().minWindow("ADOBECODEBANC", "ABC"))
+
+# leetcode problem: Longest Substring with At Most K Distinct Characters
+
+
+class Solution(object):
+    def lengthOfLongestSubstringKDistinct(self, s, k):
+        if k == 0:
+            return 0
+
+        left = 0
+        right = 0
+        char_count = {}
+        max_length = 0
+
+        while right < len(s):
+            char_count[s[right]] = char_count.get(s[right], 0) + 1
+
+            while len(char_count) > k:
+                char_count[s[left]] -= 1
+                if char_count[s[left]] == 0:
+                    del char_count[s[left]]
+                left += 1
+
+            max_length = max(max_length, right - left + 1)
+            right += 1
+
+        return max_length
+
+
+print(Solution().lengthOfLongestSubstringKDistinct("eceba", 2))
+
+# leetcode problem: Smallest Substring With Identical Characters I
+
+
+class Solution(object):
+    def smallestSubstring(self, s):
+        from collections import Counter
+
+        char_count = Counter(s)
+        required = len(char_count)
+        formed = 0
+        window_counts = {}
+        l, r = 0, 0
+        ans = float("inf"), None, None
+
+        while r < len(s):
+            character = s[r]
+            window_counts[character] = window_counts.get(character, 0) + 1
+
+            if (
+                character in char_count
+                and window_counts[character] == char_count[character]
+            ):
+                formed += 1
+
+            while l <= r and formed == required:
+                character = s[l]
+
+                if r - l + 1 < ans[0]:
+                    ans = (r - l + 1, l, r)
+
+                window_counts[character] -= 1
+                if (
+                    character in char_count
+                    and window_counts[character] < char_count[character]
+                ):
+                    formed -= 1
+
+                l += 1
+
+            r += 1
+
+        return "" if ans[0] == float("inf") else s[ans[1] : ans[2] + 1]
+
+
+print(Solution().smallestSubstring("aabcbcdbca"))
