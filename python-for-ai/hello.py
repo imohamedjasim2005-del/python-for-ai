@@ -2548,3 +2548,35 @@ while True:
             break
     except ValueError:
         print("Please enter a valid integer.")
+
+
+# create a simple to-do list application
+class ToDoList:
+    def __init__(self):
+        self.tasks = []
+
+    def add_task(self, task):
+        self.tasks.append(task)
+        print(f'Task "{task}" added to the list.')
+
+    def remove_task(self, task):
+        if task in self.tasks:
+            self.tasks.remove(task)
+            print(f'Task "{task}" removed from the list.')
+        else:
+            print(f'Task "{task}" not found in the list.')
+
+    def view_tasks(self):
+        if not self.tasks:
+            print("Your to-do list is empty.")
+        else:
+            print("Your to-do list:")
+            for idx, task in enumerate(self.tasks, 1):
+                print(f"{idx}. {task}")
+
+
+todo_list = ToDoList()
+todo_list.add_task("Buy groceries")
+todo_list.view_tasks()
+todo_list.add_task("Call Alice")
+todo_list.view_tasks()
