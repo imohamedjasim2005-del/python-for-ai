@@ -876,11 +876,13 @@ import pandas as pd
 daily_data = data["daily"]
 
 # Create a DataFrame
-df = pd.DataFrame({
-    "date": daily_data["time"],
-    "max_temp": daily_data["temperature_2m_max"],
-    "min_temp": daily_data["temperature_2m_min"],
-})
+df = pd.DataFrame(
+    {
+        "date": daily_data["time"],
+        "max_temp": daily_data["temperature_2m_max"],
+        "min_temp": daily_data["temperature_2m_min"],
+    }
+)
 
 # Convert date strings to datetime
 df["date"] = pd.to_datetime(df["date"])
@@ -2205,9 +2207,9 @@ class Solution(object):
 
         def backtrack(board, row):
             if row == n:
-                solutions.append([
-                    "." * col + "Q" + "." * (n - col - 1) for col in board
-                ])
+                solutions.append(
+                    ["." * col + "Q" + "." * (n - col - 1) for col in board]
+                )
                 return
             for col in range(n):
                 if is_safe(board, row, col):
@@ -2526,3 +2528,23 @@ class Solution(object):
 
 
 print(Solution().minMoves([1, 2, 4, 3], 4))
+
+import random
+
+secret_number = random.randint(1, 100)
+
+print("Welcome to the Number Guessing Game!")
+print("I have selected a number between 1 and 100. Can you guess it?")
+
+while True:
+    try:
+        guess = int(input("Enter your guess: "))
+        if guess < secret_number:
+            print("Too low! Try again.")
+        elif guess > secret_number:
+            print("Too high! Try again.")
+        else:
+            print(f"Congratulations! You've guessed the number!:{secret_number}")
+            break
+    except ValueError:
+        print("Please enter a valid integer.")
