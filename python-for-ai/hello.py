@@ -2580,3 +2580,17 @@ todo_list.add_task("Buy groceries")
 todo_list.view_tasks()
 todo_list.add_task("Call Alice")
 todo_list.view_tasks()
+
+# to create a smaple website using flask
+from flask import Flask, render_template
+
+app = Flask(__name__)
+
+
+@app.route("/")
+def index():
+    return render_template("index.html")
+
+
+if __name__ == "__main__":
+    app.run(debug=True)
