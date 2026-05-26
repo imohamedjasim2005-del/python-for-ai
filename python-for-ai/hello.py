@@ -2594,3 +2594,38 @@ def index():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
+
+class SRM:
+    college = "SRM"
+
+    def __init__(self, a, b, c):
+        self.student = a
+        self.reg_no = b
+        self.dept = c
+        print("The name of the student:", self.student)
+        print("Register number of the student:", self.reg_no)
+        print("department of the student:", self.dept)
+        print("The name of college:", self.college)
+
+
+class placement:
+    def __init__(self):
+        super().__init__()
+        print("We are hiring")
+        print("First round is for aptitude")
+
+
+class selected:
+    def __init__(self):
+        super().__init__()
+        print("You are hired")
+        print("Thanks for your co-operation")
+
+
+SRM.college = "BMHSS"
+s2 = SRM("Shakira", "02", "CS with AI")
+
+
+ob1 = placement()
+ob2 = selected()
