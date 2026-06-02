@@ -2623,9 +2623,77 @@ class selected:
         print("Thanks for your co-operation")
 
 
-SRM.college = "BMHSS"
-s2 = SRM("Shakira", "02", "CS with AI")
+SRM.college = "SRM University"
+s2 = SRM("G.Shakira Nasreen", "222406277", "CS with AI")
 
 
 ob1 = placement()
 ob2 = selected()
+
+n = int(input("Enter the number: "))
+sum = n * (n + 1) // 2
+print("The sum of first", n, "natural numbers is:", sum)
+
+
+class person:
+    def __init__(self, a):
+        self.name = a
+
+
+class student(person):
+    def __init__(self, a, b):
+        super().__init__(a)
+        self.grade = b
+        print("The name of the student:", self.name)
+        print("The Grade:", self.grade)
+
+
+ob2 = student("Shakira", "A+")
+
+
+class vehicle:
+    def start(self, a):
+        self.vehicle = a
+        print(self.vehicle)
+
+
+class car(vehicle):
+    def __init__(self, a):
+        super().__init__()
+        self.vehicle = a
+        print(self.vehicle)
+
+
+a = vehicle()
+a.start("Vehicle started")
+b = car("Car started")
+b.start("Car started")
+
+
+class employee:
+    def __init__(self, a, b):
+        self.name = a
+        self.salary = b
+
+
+class manager(employee):
+    def __init__(self, a, b, c):
+        super().__init__(a, b)
+        self.dept = c
+        print(self.name, self.salary, self.dept)
+
+
+ob2 = manager("Shakira", "200000", "Cs with AI")
+
+import time
+import datetime
+import pygame
+
+
+def set_alarm(alarm_time):
+    print(f"Alarm set for{alarm_time}")
+
+
+if __name__ == "__main__":
+    alarm_time = input("Enter the alarm time:")
+    set_alarm(alarm_time)
